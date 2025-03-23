@@ -1,0 +1,61 @@
+# This is a basic workflow to help you get started with Actions
+
+name: infra setup
+
+# Controls when the workflow will run
+on: workflow_dispatch
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  terraform-init:
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ap-south-1
+      ANSIBLE_HOST_KEY_CHECKING: False
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+      - uses: actions/checkout@v4
+      
+      - name: Generate ssh keys
+        run: ssh-keygen -t rsa -b 2048 -f "ssh-key" && chmod 400 ssh-key
+
+      - name: Archive the private key for ssh
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssh-private-key
+          path: ssh-key
+          
+      - name: Terraform Installation
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.10.2"
+          
+      - name: Initialize Terraform
+        run: terraform init
+        
+      - name: Plan Terraform
+        run: terraform plan
+        
+      - name: Apply Terraform
+        id: apply
+        run: terraform apply --auto-approve
+
+      - name: inventory create
+        run: sleep 60 && sh inventory-create.sh
+
+      - name: Ping all hosts
+        run: ansible -i inventory.ini -m ping all
+
+#      - name: Playbook Run
+#        run: ansible-playbook -i inventory.ini k8s-setup.yml
+
+      - name: Upload tfstate file
+        uses: actions/upload-artifact@v4
+        with:
+          name: upload tfstate file
+          path: terraform.tfstate
+  
