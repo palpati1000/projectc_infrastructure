@@ -40,6 +40,9 @@ jobs:
       - name: Plan Terraform
         run: terraform plan
         
+      - name: list directory
+        run: ls -l
+        
       - name: Apply Terraform
         id: apply
         run: terraform apply --auto-approve
