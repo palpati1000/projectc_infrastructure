@@ -142,7 +142,7 @@
   become: true
   tasks:
     - name: Initialize cluster
-      command: kubeadm config images pull --kubernetes-version=1.9 && kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.0.1.10
+      command: kubeadm config images pull && kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.0.1.10
 
     - name: Echo HOME
       shell: echo $HOME
