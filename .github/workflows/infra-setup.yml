@@ -53,8 +53,8 @@ jobs:
       - name: Ping all hosts
         run: ansible -i inventory.ini -m ping all
 
-#      - name: Playbook Run
-#        run: ansible-playbook -i inventory.ini k8s-setup.yml
+      - name: Playbook Run
+        run: ansible-playbook -i inventory.ini k8s-setup.yml
 
       - name: Upload tfstate file
         uses: actions/upload-artifact@v4
