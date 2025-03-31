@@ -107,12 +107,12 @@
         state: directory
 
     - name: Get the Kubernetes signing key
-      shell: 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg'
+      shell: 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg'
 
     - name: Add Kuberenets repository
       lineinfile:
         path: /etc/apt/sources.list.d/kubernetes.list
-        line: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb /'
+        line: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /'
         create: yes
 
     - name: Update apt cache
@@ -142,7 +142,7 @@
   become: true
   tasks:
     - name: Initialize cluster
-      command: kubeadm config images pull && kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.0.1.10
+      command: kubeadm config images pull --cri-socket unix:///run/containerd/containerd.sock && kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.0.1.10 --cri-socket unix:///run/containerd/containerd.sock
 
     - name: Echo HOME
       shell: echo $HOME
