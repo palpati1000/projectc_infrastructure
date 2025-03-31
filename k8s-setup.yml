@@ -142,7 +142,13 @@
   become: true
   tasks:
     - name: Initialize cluster
-      command: kubeadm config images pull --cri-socket unix:///run/containerd/containerd.sock && kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.0.1.10 --cri-socket unix:///run/containerd/containerd.sock
+      command: kubeadm config images pull --cri-socket unix:///run/containerd/containerd.sock
+
+- hosts: master
+  become: true
+  tasks:
+    - name: Initialize cluster
+      command: kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.0.1.10 --cri-socket unix:///run/containerd/containerd.sock
 
     - name: Echo HOME
       shell: echo $HOME
