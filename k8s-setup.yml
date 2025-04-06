@@ -148,7 +148,7 @@
   become: true
   tasks:
     - name: Initialize cluster
-      command: abc # kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.0.1.10 --cri-socket unix:///run/containerd/containerd.sock
+      command: kubeadm init --pod-network-cidr=10.244.0.0/16 --cri-socket unix:///run/containerd/containerd.sock
 
     - name: Echo HOME
       shell: echo $HOME
