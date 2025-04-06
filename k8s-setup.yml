@@ -183,7 +183,6 @@
   tasks:
     - name: Join cluster
       command: "{{ hostvars['master']['kube_join_command']['stdout_lines'][0] }}"
-      when: "'kubeadm join' in hostvars['master']['kube_join_command']['stdout']"
 
 - hosts: master
   become: true
